@@ -58,16 +58,17 @@ def handler(event, context):
             sentiment_response = comprehend.detect_sentiment(Text=text, LanguageCode="en")
             sentiment = sentiment_response['Sentiment']
             
-            table.update_item(
+            response = table.update_item(
                 Key={"id": page_id},
-                UpdateExpression="SET sentiment = :s",
-                ExpressionAttributeValues={":s": sentiment}
+                UpdateExpression="SET sentiment = :s ADD view_count :inc",
+                ExpressionAttributeValues={":s": sentiment, ":inc": 1},
+                ReturnValues="UPDATED_NEW"
             )
-            
+            count = response["Attributes"]["view_count"]
             return {
                 "statusCode": 200,
                 "headers": {"Content-Type": "application/json"},
-                "body": json.dumps({"message": "Sentiment analyzed", "sentiment": sentiment, "scores": sentiment_response['SentimentScore']})
+                "body": json.dumps({"message": "View recorded and sentiment analyzed", "count": int(count),"sentiment": sentiment, "scores": sentiment_response['SentimentScore']})
             }
 
         return {

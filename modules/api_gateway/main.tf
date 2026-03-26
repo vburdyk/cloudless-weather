@@ -1,5 +1,5 @@
-variable "api_name"             { type = string }
-variable "lambda_invoke_arn"    { type = string }
+variable "api_name" { type = string }
+variable "lambda_invoke_arn" { type = string }
 variable "lambda_function_name" { type = string }
 
 resource "aws_apigatewayv2_api" "http_api" {
@@ -35,9 +35,9 @@ resource "aws_lambda_permission" "api_gw" {
 }
 
 resource "aws_apigatewayv2_route" "ai_route" {
-  api_id = aws_apigatewayv2_api.http_api.id
+  api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /views/{id}/analyze"
-  target = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
 output "api_endpoint" {

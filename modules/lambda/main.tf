@@ -1,7 +1,7 @@
-variable "function_name"      { type = string }
-variable "source_file"        { type = string }
+variable "function_name" { type = string }
+variable "source_file" { type = string }
 variable "dynamodb_table_arn" { type = string }
-variable "dynamodb_table_name"{ type = string }
+variable "dynamodb_table_name" { type = string }
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
@@ -14,8 +14,8 @@ resource "aws_iam_role" "lambda_exec" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
       Principal = { Service = "lambda.amazonaws.com" }
     }]
   })
@@ -46,8 +46,8 @@ resource "aws_iam_role_policy" "ai_access" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect = "Allow"
-      Action = ["comprehend:DetectSentiment"]
+      Effect   = "Allow"
+      Action   = ["comprehend:DetectSentiment"]
       Resource = "*"
     }]
   })
@@ -68,5 +68,5 @@ resource "aws_lambda_function" "api_handler" {
   }
 }
 
-output "invoke_arn"    { value = aws_lambda_function.api_handler.invoke_arn }
+output "invoke_arn" { value = aws_lambda_function.api_handler.invoke_arn }
 output "function_name" { value = aws_lambda_function.api_handler.function_name }
