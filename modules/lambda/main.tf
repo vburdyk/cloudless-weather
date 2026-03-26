@@ -39,6 +39,20 @@ resource "aws_iam_role_policy" "dynamodb_access" {
   })
 }
 
+resource "aws_iam_role_policy" "ai_access" {
+  name = "${var.function_name}-ai-access"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = ["comprehend:DetectSentiment"]
+      Resource = "*"
+    }]
+  })
+}
+
 resource "aws_lambda_function" "api_handler" {
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = var.function_name
